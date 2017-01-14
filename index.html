@@ -7,11 +7,131 @@
 	<meta charset="utf-8">
 	<title> ChickTech Data Visualization Workshop </title>
 	<script type="text/javascript" src="d3/d3.v3.min.js"></script>
+
+	<style type="text/css">
+			div.bar {
+				display: inline-block;
+				width: 20px;
+				height: 20px;	/* Gets overriden by D3-assigned height below */
+				margin-right: 2px;
+				background-color: plum;
+			}
+		</style>
+
 </head>
+
 <body>
 	<script type="text/javascript">
 		// D3 Code will go here
-		d3.select("body").append("p").text("New paragraph!");
+
+// DEFINE VARIABLES WIDTH AND HEIGHT
+		var w = 500;
+		var h = 100;
+		var barPadding = 1;
+
+// RANDOM NUMBER SET!
+/*		for (var i = 0; i < 25; i++) {
+				var newNumber = Math.round(Math.random() * 30);
+				dataset.push(newNumber);
+		}
+*/
+
+		var circdataset = [ 5, 10, 15, 20, 25 ];
+		var dataset = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13,
+                11, 12, 15, 20, 18, 17, 16, 18, 23, 25 ];
+
+// CREATE SVG ELEMENT!
+		var svg = d3.select("body")
+			.append("svg")
+			.attr("width", w)
+			.attr("height", h);
+
+// RECTANGLES!
+svg.selectAll("rect")
+	 .data(dataset)
+	 .enter()
+	 .append("rect")
+	 .attr("x", function(d, i) {
+			return i * (w / dataset.length);
+	 })
+	 .attr("y", function(d) {
+			return h - (d * 4);
+	 })
+	 .attr("width", w / dataset.length - barPadding)
+	 .attr("height", function(d) {
+			return d * 4;
+	 })
+	 .attr("fill", function(d) {
+    return "rgba(120, 0, " + (d * 7) + ", .65)";
+	});
+
+	 // LABELS
+	 svg.selectAll("text")
+	 		.data(dataset)
+			.enter()
+			.append("text")
+			.text(function(d) {
+				return d;
+			})
+			.attr("x", function(d,i) {
+					return i * (w / dataset.length) + (w / dataset.length - barPadding) / 2;
+			})
+			.attr("y", function(d) {
+					return h - (d * 4) + 14;
+			})
+			.attr("font-family", "sans-serif")
+			.attr("font-size", "11px")
+			.attr("fill", "white")
+			.attr("text-anchor", "middle");
+
+// BAR CHARTS!
+		d3.select("body").selectAll("div")
+			.data(dataset)
+			.enter()
+			.append("div")
+			.attr("class", "bar")
+			.style("height", function(d) {
+				var barHeight = d * 5;
+				return barHeight + "px";
+			});
+
+// COLOR CODED NUMBERS!
+		d3.select("body").selectAll("p")
+			.data(dataset)
+			.enter()
+			.append("p")
+			.text(function(d) { return d; })
+			.style("color", function(d) {
+
+				if (d>15) {
+					return "red"
+				} else if (d<15){
+					return "blue"
+				} else {
+					return "purple"
+				}
+			});
+
+		// CIRCLES!
+/*				var circles = svg.selectAll("cicle")
+					.data(circdataset)
+					.enter()
+					.append("circle");
+
+				circles.attr("cx", function(d, i) {
+								return (i * 50) + 25;
+							})
+						.attr("cy", h/2)
+						.attr("cy", 150)
+						.attr("r", function(d) {
+							return d;
+						})
+						.attr("fill", "purple")
+						.attr("stroke", "plum")
+						.attr("stroke-width", function(d) {
+						return d/2;
+						});
+*/
 	</script>
 </body>
 </html>
